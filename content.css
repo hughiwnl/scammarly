@@ -1,0 +1,35 @@
+/* Scammarly Content Script Styles */
+
+/* Visual indicator when a typo is added */
+.scammarly-typo-indicator {
+  animation: scammarly-glow 0.3s ease-in-out;
+}
+
+@keyframes scammarly-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  }
+}
+
+/* Subtle red border flash for typo indication */
+.scammarly-typo-flash {
+  border: 2px solid rgba(255, 0, 0, 0.5) !important;
+  transition: border 0.2s ease-in-out;
+}
+
+/* Ensure the extension doesn't interfere with normal page styling */
+.scammarly-container {
+  all: initial;
+  font-family: inherit;
+}
+
+/* Hide any potential UI elements that might be added by the extension */
+.scammarly-hidden {
+  display: none !important;
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Docs Style Test - Scammarly</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .google-docs-editor {
+            min-height: 200px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+        }
+        .google-docs-editor:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 0 1px #4285f4;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .debug-info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 Google Docs Style Test - Scammarly</h1>
+    
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Make sure the Scammarly extension is enabled</li>
+            <li>Type in the Google Docs-style editor below</li>
+            <li>Watch for random typos being added!</li>
+            <li>Check the browser console (F12) for debug messages</li>
+            <li>Try typing in Google Docs itself after testing here</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h3>Google Docs Style Editor</h3>
+        <div class="google-docs-editor" contenteditable="true" role="textbox">
+            Click here and start typing... This editor mimics Google Docs behavior.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Rich Text Editor (with formatting)</h3>
+        <div class="google-docs-editor" contenteditable="true" role="textbox">
+            <p>This is a <strong>bold</strong> paragraph with <em>italic</em> text.</p>
+            <p>Try typing here and see if typos are added!</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Multiple Paragraphs</h3>
+        <div class="google-docs-editor" contenteditable="true" role="textbox">
+            <p>First paragraph - type here...</p>
+            <p>Second paragraph - type here...</p>
+            <p>Third paragraph - type here...</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Debug Information</h3>
+        <div class="debug-info">
+            <p><strong>Console Messages to Look For:</strong></p>
+            <ul>
+                <li>"Scammarly: Initializing..."</li>
+                <li>"Scammarly: Settings loaded"</li>
+                <li>"Scammarly: Input detected on DIV"</li>
+                <li>"Scammarly: Adding typo to text input"</li>
+            </ul>
+            <p><strong>If you don't see these messages:</strong></p>
+            <ul>
+                <li>Check that the extension is enabled</li>
+                <li>Reload the extension in chrome://extensions/</li>
+                <li>Try refreshing this page</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Testing in Real Google Docs</h3>
+        <p>After testing here, try:</p>
+        <ol>
+            <li>Go to <a href="https://docs.google.com" target="_blank">Google Docs</a></li>
+            <li>Create a new document</li>
+            <li>Start typing and watch for typos!</li>
+        </ol>
+    </div>
+</body>
+</html>

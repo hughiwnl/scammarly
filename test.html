@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scammarly Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔤 Scammarly Test Page</h1>
+    
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Make sure the Scammarly extension is enabled</li>
+            <li>Type in any of the text fields below</li>
+            <li>Watch for random typos being added!</li>
+            <li>Check the browser console (F12) for debug messages</li>
+        </ol>
+        <p><strong>New Typo Types:</strong> Random punctuation (!@#$), numbers (123), missing punctuation, wrong punctuation, and more!</p>
+    </div>
+
+    <div class="test-section">
+        <h3>Text Input Test</h3>
+        <input type="text" placeholder="Type here to test basic text input..." />
+    </div>
+
+    <div class="test-section">
+        <h3>Email Input Test</h3>
+        <input type="email" placeholder="Type an email address..." />
+    </div>
+
+    <div class="test-section">
+        <h3>Textarea Test</h3>
+        <textarea placeholder="Type a longer message here..." rows="4"></textarea>
+    </div>
+
+    <div class="test-section">
+        <h3>Search Input Test</h3>
+        <input type="search" placeholder="Search for something..." />
+    </div>
+
+    <div class="test-section">
+        <h3>ContentEditable Test</h3>
+        <div contenteditable="true" style="border: 1px solid #ddd; padding: 10px; min-height: 50px; background: white;">
+            Click here and type some text...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Debug Info</h3>
+        <p>Open the browser console (F12) to see debug messages from Scammarly.</p>
+        <p>You should see messages like "Scammarly: Initializing..." and "Scammarly: Input detected..."</p>
+    </div>
+</body>
+</html>
