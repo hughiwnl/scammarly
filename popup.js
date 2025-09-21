@@ -1,32 +1,33 @@
 // Popup script for Scammarly extension
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const errorRateSlider = document.getElementById('errorRateSlider');
-  const errorRateValue = document.getElementById('errorRateValue');
+  const toggle = document.getElementById('toggle');
 
   // Load current settings
-  const result = await chrome.storage.sync.get(['scammarlyErrorRate']);
-  const errorRate = result.scammarlyErrorRate || 0.1;
+  const result = await chrome.storage.sync.get(['scammarlyEnabled']);
+  const isEnabled = result.scammarlyEnabled !== false; // Default to true
 
   // Update UI
-  updateSlider(errorRate);
+  updateToggle(isEnabled);
 
-  // Slider change handler
-  errorRateSlider.addEventListener('input', async () => {
-    const rate = parseInt(errorRateSlider.value) / 100;
-    updateSlider(rate);
+  // Toggle click handler
+  toggle.addEventListener('click', async () => {
+    const newState = !toggle.classList.contains('active');
+    updateToggle(newState);
     
     // Send message to content script
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.tabs.sendMessage(tab.id, {
-      action: 'setErrorRate',
-      rate: rate
+      action: 'toggle',
+      enabled: newState
     });
   });
 
-  function updateSlider(rate) {
-    const percentage = Math.round(rate * 100);
-    errorRateSlider.value = percentage;
-    errorRateValue.textContent = percentage + '%';
+  function updateToggle(enabled) {
+    if (enabled) {
+      toggle.classList.add('active');
+    } else {
+      toggle.classList.remove('active');
+    }
   }
 });

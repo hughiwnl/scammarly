@@ -4,7 +4,7 @@
 class Scammarly {
   constructor() {
     this.isEnabled = false;
-    this.errorRate = 0.1; // 10% chance of adding an error
+    this.errorRate = 0.05; // 5% chance of adding an error (1/20 times)
     this.typoTypes = [
       'duplicate_letter',
       'missing_letter', 
@@ -18,20 +18,26 @@ class Scammarly {
       'wrong_punctuation'
     ];
     
+    // Track keystrokes to ensure random distribution
+    this.keystrokeCount = 0;
+    this.typoInterval = Math.floor(1 / this.errorRate); // Average keystrokes between typos
+    
     this.init();
   }
 
   async init() {
     console.log('Scammarly: Initializing...');
     // Load settings from storage
-    const result = await chrome.storage.sync.get(['scammarlyErrorRate']);
-    this.isEnabled = true; // Always enabled
-    this.errorRate = result.scammarlyErrorRate || 0.1;
+    const result = await chrome.storage.sync.get(['scammarlyEnabled', 'scammarlyErrorRate']);
+    this.isEnabled = result.scammarlyEnabled !== false; // Default to true
+    this.errorRate = 0.05; // Hard set to 5% (1/20 times)
     
     console.log('Scammarly: Settings loaded', { enabled: this.isEnabled, errorRate: this.errorRate });
     
-    this.startTypoGeneration();
-    console.log('Scammarly: Typo generation started');
+    if (this.isEnabled) {
+      this.startTypoGeneration();
+      console.log('Scammarly: Typo generation started');
+    }
   }
 
   startTypoGeneration() {
@@ -93,50 +99,82 @@ class Scammarly {
   }
 
   handleKeyup(event) {
-    if (!this.isEnabled || Math.random() > this.errorRate) {
+    if (!this.isEnabled) {
       return;
     }
 
     const target = event.target;
     if (this.isTextInput(target) && event.key.length === 1) {
-      // Small delay for Google Docs
-      setTimeout(() => this.addTypo(target), 50);
+      this.keystrokeCount++;
+      
+      // Check if it's time for a typo (with some randomness)
+      const shouldAddTypo = this.keystrokeCount >= this.typoInterval && Math.random() < 0.3;
+      
+      if (shouldAddTypo) {
+        this.keystrokeCount = 0; // Reset counter
+        // Small delay for Google Docs
+        setTimeout(() => this.addTypo(target), 50);
+      }
     }
   }
 
   handleCompositionEnd(event) {
-    if (!this.isEnabled || Math.random() > this.errorRate) {
+    if (!this.isEnabled) {
       return;
     }
 
     const target = event.target;
     if (this.isTextInput(target)) {
-      setTimeout(() => this.addTypo(target), 100);
+      this.keystrokeCount++;
+      
+      // Check if it's time for a typo (with some randomness)
+      const shouldAddTypo = this.keystrokeCount >= this.typoInterval && Math.random() < 0.3;
+      
+      if (shouldAddTypo) {
+        this.keystrokeCount = 0; // Reset counter
+        setTimeout(() => this.addTypo(target), 100);
+      }
     }
   }
 
   handleInput(event) {
-    if (!this.isEnabled || Math.random() > this.errorRate) {
+    if (!this.isEnabled) {
       return;
     }
 
     const target = event.target;
     console.log('Scammarly: Input detected on', target.tagName, target.type);
     if (this.isTextInput(target)) {
-      console.log('Scammarly: Adding typo to text input');
-      this.addTypo(target);
+      this.keystrokeCount++;
+      
+      // Check if it's time for a typo (with some randomness)
+      const shouldAddTypo = this.keystrokeCount >= this.typoInterval && Math.random() < 0.3;
+      
+      if (shouldAddTypo) {
+        this.keystrokeCount = 0; // Reset counter
+        console.log('Scammarly: Adding typo to text input');
+        this.addTypo(target);
+      }
     }
   }
 
   handleKeydown(event) {
-    if (!this.isEnabled || Math.random() > this.errorRate) {
+    if (!this.isEnabled) {
       return;
     }
 
     const target = event.target;
     if (this.isTextInput(target) && event.key.length === 1) {
-      // Small delay to let the character be inserted first
-      setTimeout(() => this.addTypo(target), 10);
+      this.keystrokeCount++;
+      
+      // Check if it's time for a typo (with some randomness)
+      const shouldAddTypo = this.keystrokeCount >= this.typoInterval && Math.random() < 0.3;
+      
+      if (shouldAddTypo) {
+        this.keystrokeCount = 0; // Reset counter
+        // Small delay to let the character be inserted first
+        setTimeout(() => this.addTypo(target), 10);
+      }
     }
   }
 
@@ -335,8 +373,20 @@ class Scammarly {
   }
 
   // Public methods for popup control
+  setEnabled(enabled) {
+    this.isEnabled = enabled;
+    chrome.storage.sync.set({ scammarlyEnabled: enabled });
+    
+    if (enabled) {
+      this.startTypoGeneration();
+      console.log('Scammarly: Typo generation started');
+    } else {
+      console.log('Scammarly: Typo generation stopped');
+    }
+  }
+
   setErrorRate(rate) {
-    this.errorRate = Math.max(0, Math.min(1, rate));
+    this.errorRate = 0.05; // Hard set to 5% (1/20 times)
     chrome.storage.sync.set({ scammarlyErrorRate: this.errorRate });
   }
 }
@@ -346,7 +396,10 @@ const scammarly = new Scammarly();
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'setErrorRate') {
+  if (request.action === 'toggle') {
+    scammarly.setEnabled(request.enabled);
+    sendResponse({ success: true });
+  } else if (request.action === 'setErrorRate') {
     scammarly.setErrorRate(request.rate);
     sendResponse({ success: true });
   } else if (request.action === 'getStatus') {

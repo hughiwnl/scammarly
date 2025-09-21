@@ -5,6 +5,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
     // Set default settings
     chrome.storage.sync.set({
+      scammarlyEnabled: true,
       scammarlyErrorRate: 0.1
     });
     
@@ -30,10 +31,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Set badge to always show ON
-chrome.action.setBadgeText({
-  text: 'ON'
+// Update badge text based on enabled state
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'sync' && changes.scammarlyEnabled) {
+    const isEnabled = changes.scammarlyEnabled.newValue;
+    chrome.action.setBadgeText({
+      text: isEnabled ? 'ON' : 'OFF'
+    });
+    chrome.action.setBadgeBackgroundColor({
+      color: isEnabled ? '#4CAF50' : '#ff6b6b'
+    });
+  }
 });
-chrome.action.setBadgeBackgroundColor({
-  color: '#4CAF50'
+
+// Set initial badge
+chrome.storage.sync.get(['scammarlyEnabled'], (result) => {
+  const isEnabled = result.scammarlyEnabled !== false;
+  chrome.action.setBadgeText({
+    text: isEnabled ? 'ON' : 'OFF'
+  });
+  chrome.action.setBadgeBackgroundColor({
+    color: isEnabled ? '#4CAF50' : '#ff6b6b'
+  });
 });
