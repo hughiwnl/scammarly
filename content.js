@@ -15,12 +15,19 @@ class Scammarly {
       'add_punctuation',
       'add_number',
       'remove_punctuation',
-      'wrong_punctuation'
+      'wrong_punctuation',
+      'add_curse_word'
     ];
     
     // Track keystrokes to ensure random distribution
     this.keystrokeCount = 0;
     this.typoInterval = Math.floor(1 / this.errorRate); // Average keystrokes between typos
+    
+    // Curse words (mild, non-racist)
+    this.curseWords = [
+      ' crap', ' shit', ' fuck', ' bitch', 
+      ' stupid',
+    ];
     
     this.init();
   }
@@ -233,7 +240,16 @@ class Scammarly {
     const currentValue = this.getValue(element);
     if (currentValue.length === 0) return;
 
-    const typoType = this.typoTypes[Math.floor(Math.random() * this.typoTypes.length)];
+    // Increase chance of curse words (60% chance)
+    let typoType;
+    if (Math.random() < 0.6) {
+      typoType = 'add_curse_word';
+    } else {
+      // Remove curse_word from the regular selection
+      const regularTypes = this.typoTypes.filter(type => type !== 'add_curse_word');
+      typoType = regularTypes[Math.floor(Math.random() * regularTypes.length)];
+    }
+    
     const newValue = this.applyTypo(currentValue, typoType);
     
     if (newValue !== currentValue) {
@@ -297,6 +313,10 @@ class Scammarly {
         }
         return text;
       
+      case 'add_curse_word':
+        const curseWord = this.getRandomCurseWord();
+        return text.slice(0, position) + curseWord + text.slice(position);
+      
       default:
         return text;
     }
@@ -326,6 +346,10 @@ class Scammarly {
   isPunctuation(char) {
     const punctuation = '.,!?;:-_()[]{}"\'`~@#$%^&*+=|\\/<>';
     return punctuation.includes(char);
+  }
+
+  getRandomCurseWord() {
+    return this.curseWords[Math.floor(Math.random() * this.curseWords.length)];
   }
 
   getValue(element) {
